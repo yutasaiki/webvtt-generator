@@ -1,26 +1,8 @@
 import './App.css'
-import { ChangeEventHandler, useCallback, useEffect, useRef, useState } from 'react'
+import { ChangeEventHandler, useCallback, useEffect, useRef } from 'react'
 import { useSetState } from 'react-use';
 import { TrackItem } from './components/TrackItem/TrackItem';
-
-function convertWebVTTTimeFormat(currentTime: number) {
-  const hour = Math.floor(currentTime % 86400 / 3600);
-  const min = Math.floor(currentTime % 3600 / 60);
-  const sec = currentTime % 60;
-  return `${hour.toString().padStart(2, "0")}:${min.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}.000`
-}
-
-function convertWebVtt(vttCues: VTTCue[]) {
-  const vttLines: string[] = []
-  vttCues.map((vttCue) => {
-    vttLines.push(`${convertWebVTTTimeFormat(vttCue.startTime)} --> ${convertWebVTTTimeFormat(vttCue.endTime)}`)
-    vttLines.push(`${vttCue.text}`)
-    vttLines.push("")
-  })
-
-  const webvttList = ["WEBVTT", "", ...vttLines, ""]
-  return webvttList.join("\n")
-}
+import { convertWebVtt } from './utils/convertWebVtt';
 
 type State = {
   /**
