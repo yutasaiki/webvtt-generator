@@ -40,6 +40,9 @@ function TrackItem({
 }
 
 type State = {
+  /**
+   * 読み込んだ動画時間の長さ
+   */
   duration: number;
   /**
    * 字幕作成入力ボックスの状態を管理する
