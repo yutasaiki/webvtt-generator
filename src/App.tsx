@@ -48,7 +48,11 @@ type State = {
   /**
    * 設定した字幕を動画へ反映するためのデータを管理する
    */
-  videoTextTrack: TextTrack | null
+  videoTextTrack: TextTrack | null;
+  /**
+   * VTT形式に変換された文字列データ
+   */
+  vttText: string;
 }
 
 function App() {
@@ -56,14 +60,14 @@ function App() {
   const [state, setState] = useSetState<State>({
     duration: 0,
     vttCues: [],
-    videoTextTrack: null
+    videoTextTrack: null,
+    vttText: ""
   });
-  const [vtt, setVtt] = useState("")
 
   const generateTrackText = useCallback(() => {
-    const trackText = convertWebVtt(state.vttCues)
-    setVtt(trackText)
-  }, [state.vttCues])
+    const vttText = convertWebVtt(state.vttCues)
+    setState({ vttText })
+  }, [setState, state.vttCues])
 
   const handleChangeTrackText = useCallback((i: number, value: string) => {
     const track = state.vttCues[i]
@@ -127,13 +131,13 @@ function App() {
   }, [])
 
   const downloadVttFile = useCallback(() => {
-    const blob = new Blob([vtt], { type: "application/octet-stream;charset=utf-8" });
+    const blob = new Blob([state.vttText], { type: "application/octet-stream;charset=utf-8" });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     const now = Date.now()
     link.download = `${now}.vtt`;
     link.click();
-  }, [vtt])
+  }, [state.vttText])
 
   const setupTextTrack = useCallback((video: HTMLVideoElement) => {
     if (Object.entries(video.textTracks).length !== 0) {
@@ -184,7 +188,7 @@ function App() {
       <div className='right-pane'>
         <input type="file" id="movieFile" accept='.mp4' onChange={handleChangeMovieFile} />
         <video ref={videoRef} controls />
-        <textarea className='definition-text' rows={30} value={vtt} />
+        <textarea className='definition-text' rows={30} value={state.vttText} />
         <button onClick={downloadVttFile}>.vttをダウンロード</button>
       </div>
       </div>
