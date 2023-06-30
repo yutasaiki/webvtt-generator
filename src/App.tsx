@@ -120,11 +120,8 @@ function App() {
       if (!videoRef.current) {
         return
       }
-      if (!e.target) {
-        return
-      }
-      const data = (e.target.result ?? "") as string
-      videoRef.current.setAttribute("src", data)
+      const source = (e.target?.result ?? "") as string
+      videoRef.current.setAttribute("src", source)
     })
     fileReader.readAsDataURL(files[0])
   }, [])
