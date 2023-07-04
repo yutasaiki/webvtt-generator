@@ -1,45 +1,13 @@
 import './App.css'
-import { ChangeEventHandler, useCallback, useEffect, useRef, useState } from 'react'
+import { ChangeEventHandler, useCallback, useEffect, useRef } from 'react'
 import { useSetState } from 'react-use';
-
-function convertWebVTTTimeFormat(currentTime: number) {
-  const hour = Math.floor(currentTime % 86400 / 3600);
-  const min = Math.floor(currentTime % 3600 / 60);
-  const sec = currentTime % 60;
-  return `${hour.toString().padStart(2, "0")}:${min.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}.000`
-}
-
-function convertWebVtt(vttCues: VTTCue[]) {
-  const vttLines: string[] = []
-  vttCues.map((vttCue) => {
-    vttLines.push(`${convertWebVTTTimeFormat(vttCue.startTime)} --> ${convertWebVTTTimeFormat(vttCue.endTime)}`)
-    vttLines.push(`${vttCue.text}`)
-    vttLines.push("")
-  })
-
-  const webvttList = ["WEBVTT", "", ...vttLines, ""]
-  return webvttList.join("\n")
-}
-
-function TrackItem({
-  cue,
-  duration,
-  onChangeTrackText,
-  onChangeStartTime,
-  onChangeEndTime
-}: {
-  cue: VTTCue
-  duration: number
-  onChangeTrackText: ChangeEventHandler<HTMLInputElement>
-  onChangeStartTime: ChangeEventHandler<HTMLInputElement>
-  onChangeEndTime: ChangeEventHandler<HTMLInputElement>
-}) {
-  return (<><input type="number" name="startTime" onChange={(e) => onChangeStartTime(e)} value={cue.startTime} min="0" max={duration} size={1} />
-    <input type="number" name="endTime" onChange={(e) => onChangeEndTime(e)} value={cue.endTime} min="0" max={duration} size={1} />
-    <input type="text" name="trackText" className="input-track-text" onChange={(e) => onChangeTrackText(e)} value={cue.text} width="200" placeholder='字幕テキストを入力してください' /></>)
-}
+import { TrackItem } from './components/TrackItem/TrackItem';
+import { convertWebVtt } from './utils/convertWebVtt';
 
 type State = {
+  /**
+   * 読み込んだ動画時間の長さ
+   */
   duration: number;
   /**
    * 字幕作成入力ボックスの状態を管理する
@@ -48,7 +16,11 @@ type State = {
   /**
    * 設定した字幕を動画へ反映するためのデータを管理する
    */
-  videoTextTrack: TextTrack | null
+  videoTextTrack: TextTrack | null;
+  /**
+   * VTT形式に変換された文字列データ
+   */
+  vttText: string;
 }
 
 function App() {
@@ -56,14 +28,14 @@ function App() {
   const [state, setState] = useSetState<State>({
     duration: 0,
     vttCues: [],
-    videoTextTrack: null
+    videoTextTrack: null,
+    vttText: ""
   });
-  const [vtt, setVtt] = useState("")
 
   const generateTrackText = useCallback(() => {
-    const trackText = convertWebVtt(state.vttCues)
-    setVtt(trackText)
-  }, [state.vttCues])
+    const vttText = convertWebVtt(state.vttCues)
+    setState({ vttText })
+  }, [setState, state.vttCues])
 
   const handleChangeTrackText = useCallback((i: number, value: string) => {
     const track = state.vttCues[i]
@@ -120,23 +92,20 @@ function App() {
       if (!videoRef.current) {
         return
       }
-      if (!e.target) {
-        return
-      }
-      const data = (e.target.result ?? "") as string
-      videoRef.current.setAttribute("src", data)
+      const source = (e.target?.result ?? "") as string
+      videoRef.current.setAttribute("src", source)
     })
     fileReader.readAsDataURL(files[0])
   }, [])
 
   const downloadVttFile = useCallback(() => {
-    const blob = new Blob([vtt], { type: "application/octet-stream;charset=utf-8" });
+    const blob = new Blob([state.vttText], { type: "application/octet-stream;charset=utf-8" });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     const now = Date.now()
     link.download = `${now}.vtt`;
     link.click();
-  }, [vtt])
+  }, [state.vttText])
 
   const setupTextTrack = useCallback((video: HTMLVideoElement) => {
     if (Object.entries(video.textTracks).length !== 0) {
@@ -187,7 +156,7 @@ function App() {
       <div className='right-pane'>
         <input type="file" id="movieFile" accept='.mp4' onChange={handleChangeMovieFile} />
         <video ref={videoRef} controls />
-        <textarea className='definition-text' rows={30} value={vtt} />
+        <textarea className='definition-text' rows={30} value={state.vttText} />
         <button onClick={downloadVttFile}>.vttをダウンロード</button>
       </div>
       </div>
