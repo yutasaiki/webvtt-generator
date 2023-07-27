@@ -1,4 +1,4 @@
-import './App.css'
+import { css } from '../styled-system/css';
 import { ChangeEventHandler, useCallback, useEffect, useRef } from 'react'
 import { useSetState } from 'react-use';
 import { TrackItem } from './components/TrackItem/TrackItem';
@@ -134,30 +134,32 @@ function App() {
     })
   }, [setState, setupTextTrack, state.videoTextTrack, state.vttCues.length])
   return (
-    <div className='wrapper'>
-      <h1 style={{ margin: "8px 0"}}>WebVTTジェネレーター </h1>
-      <p style={{ textAlign: "left", fontSize: "12px"}}>このツールは動画で字幕表示を確認しながらVTT形式のファイルを作成できるツールです。使い方はとても簡単で右側のペインで字幕作成したい動画を読み込ませた後、左側のペインで字幕を追加していきます。<br />「プレビュー」ボタンをクリックすることで動画へ作成した字幕を反映できます。また動画下にVTT形式でファイルの中身が表示され「.vttをダウンロード」ボタンをクリックすることでVTT形式のファイルがお手元にダウンロードされます。</p>
-      <div className='pane'>
-      <div className='left-pane'>
-        <div className='action-buttons'>
-          <button onClick={addTrack} >追加</button>
-          <button onClick={generateTrackText}>プレビュー</button>
+    <div className={css({display: "flex", flexDirection: "column", margin: "0 auto" })}>
+      <h1 className={css({ margin: "8px 0", fontSize: "2rem", fontWeight: "bold" })}>WebVTTジェネレーター </h1>
+      <p className={css({ textAlign: "left", fontSize: "12px", margin: "12px 0" })}>このツールは動画で字幕表示を確認しながらVTT形式のファイルを作成できるツールです。使い方はとても簡単で右側のペインで字幕作成したい動画を読み込ませた後、左側のペインで字幕を追加していきます。<br />「プレビュー」ボタンをクリックすることで動画へ作成した字幕を反映できます。また動画下にVTT形式でファイルの中身が表示され「.vttをダウンロード」ボタンをクリックすることでVTT形式のファイルがお手元にダウンロードされます。</p>
+      <div className={css({ display: "flex", gap: "32px" })}>
+      <div className={css({ width: "640px", overflowY: "scroll", border: "1px solid #222222" })} >
+        <div className={css({display: "flex", gap: "16px", justifyContent: "center", margin: "16px 0"})}>
+          <button className={css({ backgroundColor: "#007bff", color: "#ffffff", width: "200px", fontSize: "12px", fontWeight: "bold", padding: "4px 0", borderRadius: "4px", _hover: { opacity: "0.7", cursor: "pointer" }})} onClick={addTrack} >追加</button>
+          <button className={css({ backgroundColor: "#ffc107", color: "#222222", width: "200px", fontSize: "12px", fontWeight: "bold", padding: "4px 0", borderRadius: "4px", _hover: { opacity: "0.7", cursor: "pointer" } })} onClick={generateTrackText}>プレビュー</button>
         </div>
-        <ul>
+        <ul className={css({ padding: 0 })}>
           {state.vttCues.length !== 0 ? state.vttCues.map((cue, index) => {
-            return (<li key={cue.id}>
-              <span className='item-number'>{index + 1}</span>
+            return (<li className={css({ padding: "4px 0", listStyleType: "none", gap: "8px", display: "flex", justifyContent: "center" })} key={cue.id}>
+              <span className={css({ fontSize: "18px", fontWeight: "bold" })}>{index + 1}</span>
               <TrackItem cue={cue} duration={state.duration} onChangeTrackText={(e) => handleChangeTrackText(index, e.currentTarget.value)} onChangeStartTime={(e) => handleChangeStartTime(index, Number.parseInt(e.currentTarget.value))} onChangeEndTime={(e) => handleChangeEndTime(index, Number.parseInt(e.currentTarget.value))} ></TrackItem>
-              <button onClick={() => deleteTrack(cue.id)}>削除</button>
+              <button className={css({ backgroundColor: "#dc3545", color: "#ffffff", width: "72px", fontSize: "12px", fontWeight: "bold", padding: "4px 0", borderRadius: "4px", _hover: { opacity: "0.7", cursor: "pointer" }})} onClick={() => deleteTrack(cue.id)}>削除</button>
             </li>)
           }) : <p>動画を読み見込ませてテキストトラックを追加しましょう！</p>}
         </ul>
       </div>
-      <div className='right-pane'>
+      <div className={css({ display: "flex", flexDirection: "column", width: "640px" })}>
         <input type="file" id="movieFile" accept='.mp4' onChange={handleChangeMovieFile} />
-        <video ref={videoRef} controls />
-        <textarea className='definition-text' rows={30} value={state.vttText} />
-        <button onClick={downloadVttFile}>.vttをダウンロード</button>
+        <video ref={videoRef} controls className={css({width: "100%"})}/>
+        <textarea className={css({textAlign: "left"})} rows={30} value={state.vttText} />
+        <div className={css({ marginTop: "8px" })}>
+        <button className={css({ backgroundColor: "#ffc107", color: "#222222", width: "200px", fontSize: "12px", fontWeight: "bold", padding: "8px 0", borderRadius: "4px", _hover: { opacity: "0.7", cursor: "pointer" }})} onClick={downloadVttFile}>.vttをダウンロード</button>
+        </div>
       </div>
       </div>
     </div>
