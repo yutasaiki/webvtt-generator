@@ -138,7 +138,7 @@ function App() {
       <h1 className={css({ margin: "8px 0", fontSize: "2rem", fontWeight: "bold" })}>WebVTTジェネレーター </h1>
       <p className={css({ display: "flex", justifyContent: "center", textAlign: "left", fontSize: "12px", margin: "12px 0" })}>このツールは動画で字幕表示を確認しながらVTT形式のファイルを作成できるツールです。使い方はとても簡単で右側のペインで字幕作成したい動画を読み込ませた後、左側のペインで字幕を追加していきます。<br />「プレビュー」ボタンをクリックすることで動画へ作成した字幕を反映できます。また動画下にVTT形式でファイルの中身が表示され「.vttをダウンロード」ボタンをクリックすることでVTT形式のファイルがお手元にダウンロードされます。</p>
       <div className={css({ display: "flex", justifyContent: "center", gap: "16px" })}>
-      <div className={css({ flexGrow: 1, overflowY: "scroll", border: "1px solid #222222" })} >
+      <div className={css({ flexGrow: 1, overflowY: "scroll", border: "1px solid #222222", maxHeight: "620px" })} >
         <div className={css({display: "flex", gap: "16px", justifyContent: "center", margin: "16px 0"})}>
           <button className={css({ backgroundColor: "#007bff", color: "#ffffff", width: "200px", fontSize: "12px", fontWeight: "bold", padding: "4px 0", borderRadius: "4px", _hover: { opacity: "0.7", cursor: "pointer" }})} onClick={addTrack} >追加</button>
           <button className={css({ backgroundColor: "#ffc107", color: "#222222", width: "200px", fontSize: "12px", fontWeight: "bold", padding: "4px 0", borderRadius: "4px", _hover: { opacity: "0.7", cursor: "pointer" } })} onClick={generateTrackText}>プレビュー</button>
