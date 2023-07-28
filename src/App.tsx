@@ -145,7 +145,7 @@ function App() {
         </div>
         <ul className={css({ padding: 0 })}>
           {state.vttCues.length !== 0 ? state.vttCues.map((cue, index) => {
-            return (<li className={css({ padding: "4px 0", listStyleType: "none", gap: "8px", display: "flex", justifyContent: "center" })} key={cue.id}>
+            return (<li className={css({ padding: "4px 8px", listStyleType: "none", gap: "8px", display: "flex", justifyContent: "center" })} key={cue.id}>
               <span className={css({ fontSize: "18px", fontWeight: "bold" })}>{index + 1}</span>
               <TrackItem cue={cue} duration={state.duration} onChangeTrackText={(e) => handleChangeTrackText(index, e.currentTarget.value)} onChangeStartTime={(e) => handleChangeStartTime(index, Number.parseInt(e.currentTarget.value))} onChangeEndTime={(e) => handleChangeEndTime(index, Number.parseInt(e.currentTarget.value))} ></TrackItem>
               <button className={css({ backgroundColor: "#dc3545", color: "#ffffff", width: "72px", fontSize: "12px", fontWeight: "bold", padding: "4px 0", borderRadius: "4px", _hover: { opacity: "0.7", cursor: "pointer" }})} onClick={() => deleteTrack(cue.id)}>削除</button>
