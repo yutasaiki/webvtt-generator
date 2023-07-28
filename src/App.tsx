@@ -156,7 +156,7 @@ function App() {
       <div className={css({ flexGrow: 1, display: "flex", flexDirection: "column", gap: 2 })}>
         <input type="file" id="movieFile" accept='.mp4' onChange={handleChangeMovieFile} />
         <video ref={videoRef} controls className={css({width: "100%"})}/>
-        <textarea className={css({textAlign: "left", border: "solid 1px #222222", borderRadius: "4px"})} rows={10} value={state.vttText} />
+        <textarea className={css({textAlign: "left", border: "solid 1px #222222", borderRadius: "4px", height: "300px", resize: "none", width: "100%"})} rows={10} value={state.vttText} />
         <div className={css({ display: "flex", justifyContent: "center" })}>
         <button className={css({ backgroundColor: "#ffc107", color: "#222222", width: "200px", fontSize: "12px", fontWeight: "bold", padding: "8px 0", borderRadius: "4px", _hover: { opacity: "0.7", cursor: "pointer" }})} onClick={downloadVttFile}>.vttをダウンロード</button>
         </div>
