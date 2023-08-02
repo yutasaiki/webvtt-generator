@@ -22,6 +22,10 @@ type State = {
    * VTT形式に変換された文字列データ
    */
   vttText: string;
+  /**
+   * 動画の読み込みが完了状態となったか
+   */
+  hasLoadedVideo: boolean;
 }
 
 function App() {
@@ -30,7 +34,8 @@ function App() {
     duration: 0,
     vttCues: [],
     videoTextTrack: null,
-    vttText: ""
+    vttText: "",
+    hasLoadedVideo: false
   });
 
   const generateTrackText = useCallback(() => {
@@ -97,7 +102,8 @@ function App() {
       videoRef.current.setAttribute("src", source)
     })
     fileReader.readAsDataURL(files[0])
-  }, [])
+    setState({ hasLoadedVideo: true })
+  }, [setState])
 
   const downloadVttFile = useCallback(() => {
     const blob = new Blob([state.vttText], { type: "application/octet-stream;charset=utf-8" });
@@ -136,7 +142,7 @@ function App() {
   }, [setState, setupTextTrack, state.videoTextTrack, state.vttCues.length])
 
   const handleSortEnd = useCallback((dragIndex: number, hoverIndex: number) => {
-    setState(({ vttCues })=>({
+    setState(({ vttCues }) => ({
       vttCues: update(vttCues, {
         $splice: [
           [dragIndex, 1],
@@ -152,8 +158,10 @@ function App() {
       <div className={css({ display: "flex", justifyContent: "center", gap: "16px" })}>
         <div className={css({ flexGrow: 1, overflowY: "scroll", border: "1px solid #222222", maxHeight: "620px" })} >
           <div className={css({ display: "flex", gap: "16px", justifyContent: "center", margin: "16px 0" })}>
-            <button className={css({ backgroundColor: "#007bff", color: "#ffffff", width: "200px", fontSize: "12px", fontWeight: "bold", padding: "4px 0", borderRadius: "4px", _hover: { opacity: "0.7", cursor: "pointer" } })} onClick={addTrack} >追加</button>
-            <button className={css({ backgroundColor: "#ffc107", color: "#222222", width: "200px", fontSize: "12px", fontWeight: "bold", padding: "4px 0", borderRadius: "4px", _hover: { opacity: "0.7", cursor: "pointer" } })} onClick={generateTrackText}>プレビュー</button>
+            <button disabled={!state.hasLoadedVideo} className={css({ backgroundColor: "#007bff", color: "#ffffff", width: "200px", fontSize: "12px", fontWeight: "bold", padding: "4px 0", borderRadius: "4px", _hover: state.hasLoadedVideo ? { opacity: "0.7", cursor: "pointer" } : undefined, _disabled: !state.hasLoadedVideo ? { opacity: 0.3, cursor: 'not-allowed' } : undefined })} onClick={addTrack} >
+              追加
+            </button>
+            <button disabled={!state.hasLoadedVideo} className={css({ backgroundColor: "#ffc107", color: "#222222", width: "200px", fontSize: "12px", fontWeight: "bold", padding: "4px 0", borderRadius: "4px", _hover: state.hasLoadedVideo ? { opacity: "0.7", cursor: "pointer" } : undefined, _disabled: !state.hasLoadedVideo ? { opacity: 0.3, cursor: 'not-allowed' } : undefined })} onClick={generateTrackText}>プレビュー</button>
           </div>
           <ul className={css({ padding: 0 })}>
             {state.vttCues.length !== 0 ? state.vttCues.map((cue, index) => {
