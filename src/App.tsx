@@ -155,8 +155,8 @@ function App() {
     <div className={css({ display: "flex", flexDirection: "column", margin: "0 auto" })}>
       <h1 className={css({ margin: "8px 0", fontSize: "2rem", fontWeight: "bold" })}>WebVTTジェネレーター </h1>
       <p className={css({ display: "flex", justifyContent: "center", textAlign: "left", fontSize: "12px", margin: "12px 0" })}>このツールは動画で字幕表示を確認しながらVTT形式のファイルを作成できるツールです。使い方はとても簡単で右側のペインで字幕作成したい動画を読み込ませた後、左側のペインで字幕を追加していきます。<br />「プレビュー」ボタンをクリックすることで動画へ作成した字幕を反映できます。また動画下にVTT形式でファイルの中身が表示され「.vttをダウンロード」ボタンをクリックすることでVTT形式のファイルがお手元にダウンロードされます。</p>
-      <div className={css({ display: "flex", justifyContent: "center", gap: "16px" })}>
-        <div className={css({ flexGrow: 1, overflowY: "scroll", border: "1px solid #222222", maxHeight: "620px" })} >
+      <div className={css({ display: "flex", justifyContent: "center", gap: "16px", position: 'relative' })}>
+        <div className={css({ width: "640px", overflowY: "scroll", border: "1px solid #222222" })} >
           <div className={css({ display: "flex", gap: "16px", justifyContent: "center", margin: "16px 0" })}>
             <button disabled={!state.hasLoadedVideo} className={css({ backgroundColor: "#007bff", color: "#ffffff", width: "200px", fontSize: "12px", fontWeight: "bold", padding: "4px 0", borderRadius: "4px", _hover: state.hasLoadedVideo ? { opacity: "0.7", cursor: "pointer" } : undefined, _disabled: !state.hasLoadedVideo ? { opacity: 0.3, cursor: 'not-allowed' } : undefined })} onClick={addTrack} >
               追加
@@ -169,7 +169,7 @@ function App() {
             }) : <p>動画を読み見込ませてテキストトラックを追加しましょう！</p>}
           </ul>
         </div>
-        <div className={css({ flexGrow: 1, display: "flex", flexDirection: "column", gap: 2 })}>
+        <div className={css({ width: "100%", maxWidth: "640px", display: "flex", flexDirection: "column", gap: 2 })}>
           <input type="file" id="movieFile" accept='.mp4' onChange={handleChangeMovieFile} />
           <video ref={videoRef} controls className={css({ width: "100%" })} />
           <textarea className={css({ textAlign: "left", border: "solid 1px #222222", borderRadius: "4px", height: "300px", resize: "none", width: "100%" })} rows={10} value={state.vttText} />
