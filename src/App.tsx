@@ -161,7 +161,7 @@ function App() {
             <button disabled={!state.hasLoadedVideo} className={css({ backgroundColor: "#007bff", color: "#ffffff", width: "200px", fontSize: "12px", fontWeight: "bold", padding: "4px 0", borderRadius: "4px", _hover: state.hasLoadedVideo ? { opacity: "0.7", cursor: "pointer" } : undefined, _disabled: !state.hasLoadedVideo ? { opacity: 0.3, cursor: 'not-allowed' } : undefined })} onClick={addTrack} >
               追加
             </button>
-            <button disabled={!state.hasLoadedVideo} className={css({ backgroundColor: "#ffc107", color: "#222222", width: "200px", fontSize: "12px", fontWeight: "bold", padding: "4px 0", borderRadius: "4px", _hover: state.hasLoadedVideo ? { opacity: "0.7", cursor: "pointer" } : undefined, _disabled: !state.hasLoadedVideo ? { opacity: 0.3, cursor: 'not-allowed' } : undefined })} onClick={generateTrackText}>プレビュー</button>
+            <button disabled={!state.hasLoadedVideo} className={css({ backgroundColor: "#ffc107", color: "#222222", width: "200px", fontSize: "12px", fontWeight: "bold", padding: "4px 0", borderRadius: "4px", _hover: state.hasLoadedVideo ? { opacity: "0.7", cursor: "pointer" } : undefined, _disabled: !state.hasLoadedVideo ? { opacity: 0.3, cursor: 'not-allowed' } : undefined })} onClick={generateTrackText}>WebVTTファイルをプレビュー</button>
           </div>
           <ul className={css({ padding: 0 })}>
             {state.vttCues.length !== 0 ? state.vttCues.map((cue, index) => {
